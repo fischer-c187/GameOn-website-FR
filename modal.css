@@ -93,7 +93,7 @@ main {
   cursor: pointer;
 }
 
-.modal-btn:hover {
+.modal-btn:hover, .btn-close:hover {
   background: #3876ac;
 }
 
@@ -154,12 +154,19 @@ main {
   margin: 15px auto;
 }
 
+.modal-body--valid {
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
 label {
   font-family: var(--font-default);
-  font-size: 17px;
+  font-size: 0.875rem;
   font-weight: normal;
   display: inline-block;
-  margin-bottom: 11px;
+  margin: 15px 0;
 }
 input {
   padding: 8px;
@@ -174,14 +181,14 @@ input {
   font-size: 20px;
   height: 48px;
 }
+
 .formData[data-error]::after {
   content: attr(data-error);
-  font-size: 0.4em;
+  font-size: 0.75rem;
   color: #e54858;
   display: block;
-  margin-top: 7px;
-  margin-bottom: 7px;
-  text-align: right;
+  margin: 0.5em 0 1em 1em;
+  text-align: left;
   line-height: 0.3;
   opacity: 0;
   transition: 0.3s;
@@ -288,7 +295,8 @@ input[data-error]::after {
   transform: rotate(-45deg);
 }
 .btn-submit,
-.btn-signup {
+.btn-signup,
+.btn-close {
   background: #fe142f;
   display: block;
   margin: 0 auto;
@@ -368,7 +376,9 @@ input[data-error]::after {
 /* custom select end */
 .text-label {
   font-weight: normal;
-  font-size: 16px;
+  font-size: 0.875rem;
+  padding: 0;
+  margin: 15px 0;
 }
 .hero-section {
   border-radius: 10px;
@@ -429,11 +439,6 @@ input[data-error]::after {
 }
 .hero-section > .btn-signup {
   display: none;
-}
-footer {
-  padding-left: 2vw;
-  padding-right: 2vw;
-  margin: 0 20px;
 }
 
 @media screen and (max-width: 1100px) {
