@@ -1,3 +1,5 @@
+import { hiddenModal } from "./modal.js";
+
 // contient toutes les informations de chaque input :
 // la clés correspondent à la valeur de l'attribut name de chaque input
 const validation = {
@@ -135,12 +137,12 @@ function validationRadio(event) {
  * @param {Object} validationObj correspond à notre object qui contient les conditions, message d'erreur et la validation de l'entrée 
  * @returns {Array} contient tous les elements séléctionnés 
  */
-function setEventValidation(validationObj) {
+export function setEventValidation() {
   const elements = [];
   let element = '';
 
-  for (let key of Object.keys(validationObj)) {
-    let condition = validationObj[key].condition;
+  for (let key of Object.keys(validation)) {
+    let condition = validation[key].condition;
     let selector = `input[name=${key}]`;
 
     // on vérifie si la condition de notre input est une regex 
@@ -148,19 +150,19 @@ function setEventValidation(validationObj) {
       element = document.querySelector(selector);
       element.addEventListener('blur', validationText);
       element.addEventListener('input', validationText);
-      validationObj[key].valid = regexTest(condition, element.value)
+      validation[key].valid = regexTest(condition, element.value)
     }
     else if (condition === 'check') {
       element = document.querySelector(selector);
       element.addEventListener('change', validationCheck);
-      validationObj[key].valid = checked(element)
+      validation[key].valid = checked(element)
     } 
     // on ajoute notre événement à tous les input de type radio
     else if (condition === 'radio') {
       element = document.querySelectorAll(selector);
       for (let radio of element) {
         radio.addEventListener('change', validationRadio);
-        validationObj[key].valid = (checked(radio) && validationObj[key].valid === false) ? true : validationObj[key].valid;
+        validation[key].valid = (checked(radio) && validation[key].valid === false) ? true : validation[key].valid;
       }
     }
 
@@ -175,7 +177,7 @@ function setEventValidation(validationObj) {
  * 
  * @param {Event} Event reçu lors du click sur le boutton d'inscription
  */
-function validate(event) {
+export function validate(event) {
   event.preventDefault();
 
   let isValid = true;
@@ -215,6 +217,8 @@ function displaySuccessMessage() {
   modalBody.append(text, btn);
 }
 
-const elements = setEventValidation(validation);
-const btnSubmit = document.querySelector('.btn-submit');
-btnSubmit.addEventListener('click', validate);
+export function setBtnSubmit () {
+  const btnSubmit = document.querySelector('.btn-submit');
+  btnSubmit.addEventListener('click', validate);
+}
+
