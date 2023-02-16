@@ -1,7 +1,7 @@
 import { hiddenModal } from "./modal.js";
 
-// contient toutes les informations de chaque input :
-// la clés correspondent à la valeur de l'attribut name de chaque input
+// Contains all the information for each input:
+// the keys correspond to the value of the "name" attribute of each input.
 const validation = {
   first: {
     errorMessage: 'Veuillez rentrer deux caractères minimum',
@@ -15,12 +15,12 @@ const validation = {
   },
   email: {
     errorMessage: 'Veuillez rentrer une adresse email valide',
-    condition: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+    condition: /^\w+[\.-]?\w+@\w+[\.-]?\w+\.\w{2,3}$/,
     valid: false,
   },
   birthdate: {
     errorMessage: 'Vous devez entrer votre date de naissance.',
-    condition: /^(19[0-9][0-9]|20[012][0-9]|2022)\-[0-9]{1,2}\-[0-9]{1,2}$/,
+    condition: /^19[0-9]{2}|20[01][0-9]|202[0-2]\-[0-9]{1,2}\-[0-9]{1,2}$/,
     valid: false,
   },
   quantity: {
@@ -41,14 +41,14 @@ const validation = {
 };
 
 /**
- * on ajoute les classes qui permettent de gérer l'affichage de l'erreur,
- * en css on affiche l'erreur avec un ::after la propriétée content récupère le message d'erreur 
- * avec la fonction css attr(data-error).
+ * Adds classes that allow for error display.
+ * In CSS, the error is displayed using "::after", and the "content" property retrieves the error message
+ * using the "attr(data-error)" function.
  * 
- * On affiche l'erreur sur le parent (<div class="formData">)
+ * The error is displayed on the parent element (<div class="formData">).
  * 
- * @param {Element} element élément concerné par l'erreur
- * @param {string} text message d'erreur 
+ * @param {Element} element the element that the error pertains to
+ * @param {string} text the error message
  */
 function enableError(element, text) {
   element.parentNode.setAttribute('data-error-visible', true);
@@ -57,9 +57,9 @@ function enableError(element, text) {
 }
 
 /**
- * on désactive l'erreur en modifiant la valeur de l'attribut data-error-visible
+ * Deactivates the error by modifying the value of the "data-error-visible" attribute.
  * 
- * @param {element} element 
+ * @param {Element} element the element to be modified
  */
 function disableError(element) {
   element.parentNode.setAttribute('data-error-visible', false);
@@ -67,8 +67,8 @@ function disableError(element) {
 }
 
 /**
- * return le resultat d'un test regex 
- * 
+ * Returns the result of a regex test. 
+ *
  * @param {RegExp} regex 
  * @param {string} text 
  * 
@@ -78,16 +78,22 @@ function regexTest (regex, text) {
   return regex.test(text)
 }
 
+
+/**
+ * returns the results of checked
+ * 
+ * @param {Element} element 
+ * @returns {boolean}
+ */
 function checked (element) {
   return element.checked
 }
 
 /**
- * fonction de validation pour toutes les inputs de type text, date etc.
- * on se sert de event.target.name pour récupèrer notre regex dans notre object validation
- * on test notre regex sur event.target.value
+ * Validation function for all text, date, and other input types.
+ * Uses "event.target.name" to retrieve the regex from the validation object, and tests it on "event.target.value".
  * 
- * @param {Event} event 
+ * @param {Event} event the event object
  */
 function validationText(event) {
   const name = event.target.name
@@ -102,9 +108,9 @@ function validationText(event) {
 }
 
 /**
- * Concerne la vérification des inputs de type checkbox
+ * Checks checkbox inputs.
  * 
- * @param {Event} event 
+ * @param {Event} event the event object
  */
 function validationCheck(event) {
   const name = event.target.name
@@ -115,13 +121,11 @@ function validationCheck(event) {
     enableError(event.target, validation[name].errorMessage);
   }
 }
-
 /**
- * Concerne la vérification des inputs de type radio, on vérifie que notre input n'avait aucune
- * case de cochée, il n'est pas possible de désélectionner notre case, c'est inutile de modifier
- * la valeur de valid si elle est déjà sur true
+ * Checks radio inputs to verify that none are selected. It is not possible to deselect a radio button,
+ * so there is no need to modify the "valid" value if it is already "true".
  * 
- * @param {Event} event 
+ * @param {Event} event the event object
  */
 function validationRadio(event) {
   const name = event.target.name
@@ -131,11 +135,10 @@ function validationRadio(event) {
 }
 
 /**
- * Permet d'initialiser tout nos events sur nos inputs, on verifie si des champs sont déjà remplis 
- * et on met à jour la valeur de validation.name.valid en conséquence 
+ * Initializes all input events. Checks if any fields are already filled and updates the value of "validation.name.valid" accordingly.
  * 
- * @param {Object} validationObj correspond à notre object qui contient les conditions, message d'erreur et la validation de l'entrée 
- * @returns {Array} contient tous les elements séléctionnés 
+ * @param {Object} validationObj the object that contains the conditions, error messages, and input validation
+ * @returns {Array} contains all selected elements
  */
 export function setEventValidation() {
   const elements = [];
@@ -145,7 +148,7 @@ export function setEventValidation() {
     let condition = validation[key].condition;
     let selector = `input[name=${key}]`;
 
-    // on vérifie si la condition de notre input est une regex 
+    // Checks if the input condition is a regex.
     if (condition instanceof RegExp) {
       element = document.querySelector(selector);
       element.addEventListener('blur', validationText);
@@ -157,7 +160,7 @@ export function setEventValidation() {
       element.addEventListener('change', validationCheck);
       validation[key].valid = checked(element)
     } 
-    // on ajoute notre événement à tous les input de type radio
+    // Adds an event to all radio inputs.
     else if (condition === 'radio') {
       element = document.querySelectorAll(selector);
       for (let radio of element) {
@@ -173,10 +176,10 @@ export function setEventValidation() {
 }
 
 /**
- * si toutes les entrées du formulaire sont validées alors on affiche le message d'inscription
+ * If all form inputs are valid, display the registration message.
  * 
- * @param {Event} Event reçu lors du click sur le boutton d'inscription
- */
+ * @param {Event} event the event object received when the registration button is clicked
+ */ 
 export function validate(event) {
   event.preventDefault();
 
@@ -195,6 +198,14 @@ export function validate(event) {
   }
 }
 
+/**
+ * Creates an HTML element.
+ * 
+ * @param {string} tag the tag for our element
+ * @param {string} className the classes to add to our element
+ * @param {string} value the element value
+ * @returns {Element}
+ */ 
 function createElement(tag, className, value) {
   const element = document.createElement(tag);
   element.setAttribute('class', className);
@@ -203,8 +214,8 @@ function createElement(tag, className, value) {
 }
 
 /**
- * affichage du message de validation de l'inscription
- */
+ * Displays the registration validation message.
+ */ 
 function displaySuccessMessage() {
   const modalBody = document.querySelector('.modal-body');
   modalBody.innerHTML = ''
@@ -217,6 +228,9 @@ function displaySuccessMessage() {
   modalBody.append(text, btn);
 }
 
+/**
+ * Initializes the submit button.
+ */ 
 export function setBtnSubmit () {
   const btnSubmit = document.querySelector('.btn-submit');
   btnSubmit.addEventListener('click', validate);
